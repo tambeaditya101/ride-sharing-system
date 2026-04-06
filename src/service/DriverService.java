@@ -6,7 +6,7 @@ import java.util.*;
 
 public class DriverService {
 
-    private Map<Long, Driver> drivers = new HashMap<>();
+    private Map<Long, Driver> drivers = new LinkedHashMap<>();
 
     public Driver registerDriver(String name, String location) {
         Driver driver = new Driver(name, location, true);

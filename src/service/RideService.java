@@ -1,7 +1,10 @@
 package service;
 
+import exception.NoDriverAvailableException;
+import exception.RideNotFoundException;
 import model.*;
 import strategy.FareStrategy;
+import strategy.PeakHourFareStrategy;
 import strategy.RideMatchingStrategy;
 
 import java.sql.Time;
@@ -39,7 +42,7 @@ public class RideService {
         Driver driver = matchingStrategy.findDriver(rider, drivers);
 
         if (driver == null) {
-            throw new RuntimeException("No drivers available");
+            throw new NoDriverAvailableException("No drivers available");
         }
 
         // 4. Create Ride
@@ -77,6 +80,7 @@ public class RideService {
 
         // 2. Free driver
         Driver driver = ride.getDriver();
+        driver.incrementRides();
         driverService.updateAvailability(driver.getId(), true);
     }
 
@@ -84,4 +88,27 @@ public class RideService {
         return new ArrayList<>(rides.values());
     }
 
+    public void cancelRide(long rideId) {
+
+        Ride ride = rides.get(rideId);
+
+        if (ride == null) {
+            throw new RideNotFoundException("No rides available");
+        }
+
+        if (ride.getStatus() == RideStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel completed ride");
+        }
+
+        // 1. Update status
+        ride.setStatus(RideStatus.CANCELLED);
+
+        // 2. Free driver
+        Driver driver = ride.getDriver();
+        driverService.updateAvailability(driver.getId(), true);
+    }
+
+    public void setFareStrategy(PeakHourFareStrategy peakHourFareStrategy) {
+        this.fareStrategy = fareStrategy;
+    }
 }

@@ -10,13 +10,16 @@ public class LeastActiveDriverStrategy implements RideMatchingStrategy {
     @Override
     public Driver findDriver(Rider rider, List<Driver> drivers) {
 
-        // Dummy logic for now
+        Driver selected = null;
+
         for (Driver driver : drivers) {
             if (driver.isAvailable()) {
-                return driver;
+                if (selected == null || driver.getTotalRides() < selected.getTotalRides()) {
+                    selected = driver;
+                }
             }
         }
 
-        return null;
+        return selected;
     }
 }

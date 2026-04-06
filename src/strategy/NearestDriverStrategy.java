@@ -11,8 +11,16 @@ public class NearestDriverStrategy implements RideMatchingStrategy {
     public Driver findDriver(Rider rider, List<Driver> drivers) {
 
         for (Driver driver : drivers) {
+            if (driver.isAvailable() &&
+                    driver.getCurrentLocation().equalsIgnoreCase(rider.getLocation())) {
+                return driver;
+            }
+        }
+
+        // fallback
+        for (Driver driver : drivers) {
             if (driver.isAvailable()) {
-                return driver; // first available for now
+                return driver;
             }
         }
 

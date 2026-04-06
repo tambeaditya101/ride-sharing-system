@@ -8,6 +8,7 @@ public class Driver {
     private String name;
     private String currentLocation;
     private boolean available;
+    private int totalRides;
 
     public Driver(long id, String name, String currentLocation, boolean available) {
         this.id = IdGenerator.getNextDriverId();
@@ -52,5 +53,13 @@ public class Driver {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getTotalRides() {
+        return totalRides;
+    }
+
+    public void incrementRides() {
+        this.totalRides++;
     }
 }
